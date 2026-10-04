@@ -135,6 +135,12 @@ pub fn build(b: *Build) void {
         .root_source_file = b.path("carts/sensors/main.zig"),
     });
     add_cart(b, &dep, .{
+        .name = "suzu",
+        .optimize = .ReleaseSmall,
+        .root_source_file = b.path("carts/suzu/src/main.zig"),
+        .custom_builder = @import("carts/suzu/build_assets.zig").build_cart,
+    });
+    add_cart(b, &dep, .{
         .name = "empty-cart",
         .optimize = .ReleaseSmall,
         .root_source_file = b.path("carts/empty-cart/main.zig"),

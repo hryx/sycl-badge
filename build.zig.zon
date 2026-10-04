@@ -22,5 +22,9 @@
             .url = "git+https://github.com/MasonRemaley/SDL3?ref=zig-0.17.0#e435ce01ebb0b976ebfb77e6e42e1c51bcb7db60",
             .hash = "sdl-1.0.3+3.4.16-i4QD0ecIqgDBtEjDt3HOk75vEsDjNkPhw_ZIYMEu-NT_",
         },
+        .suzu = .{
+            .path = "../hryx/suzu",
+            .lazy = true,
+        },
     },
 }
