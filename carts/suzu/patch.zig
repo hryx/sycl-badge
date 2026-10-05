@@ -47,7 +47,12 @@ pub fn build(p: *Program) !void {
     }))[0];
     const fc = try p.mul(cutoff, try p.fma(env, .{ .float = 1.5 }, .{ .float = 0.5 }));
     const lowpass = (try p.call(dsp.filter.svf, &.{ fc, damp, pulse }))[0];
-    const bass = try p.mul(try p.mul(lowpass, env), bass_level);
+    // The resonant peak shouts once it reaches the buzzer's loud band, so
+    // trade level for resonance above ~500 Hz and leave low cutoffs alone.
+    const knee = try p.min(try p.max(try p.fma(fc, .{ .float = 1.0 / 1000.0 }, .{ .float = -0.5 }), .{ .float = 0 }), .{ .float = 1 });
+    const excess = try p.sub(try p.div(.{ .float = 1 }, damp), .{ .float = 1 });
+    const tame = try p.div(.{ .float = 1 }, try p.fma(try p.mul(excess, knee), .{ .float = 0.25 }, .{ .float = 1 }));
+    const bass = try p.mul(try p.mul(try p.mul(lowpass, tame), env), bass_level);
 
     const kick = try drum(p, wavTable(b.allocator, @embedFile("data/kick.wav")), &song.kick);
     const snare = try drum(p, wavTable(b.allocator, @embedFile("data/snare.wav")), &song.snare);
