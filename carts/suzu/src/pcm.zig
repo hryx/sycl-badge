@@ -87,6 +87,11 @@ pub fn playhead() u32 {
     return hardwareIndex();
 }
 
+/// Frames written but not played yet.
+pub fn queued() u32 {
+    return (cursor -% hardwareIndex()) & ring_mask;
+}
+
 /// Frame at ring index `index`, as written by `pump`.
 pub fn frameAt(index: u32) f32 {
     const bits: u32 = ring[index & ring_mask] >> 16;

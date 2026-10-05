@@ -12,6 +12,7 @@ const patch = @import("patch");
 
 const pcm = @import("pcm.zig");
 const scope = @import("scope.zig");
+const leds = @import("leds.zig");
 
 comptime {
     cart.export_start_code();
@@ -52,6 +53,7 @@ pub fn update() void {
         const t0 = cart.micros_since_boot();
         pcm.pump({}, render);
         busy_us += cart.micros_since_boot() - t0;
+        leds.update(rendered_frames -| pcm.queued(), drums_on, bass_on);
     }
 
     drawStatus();
